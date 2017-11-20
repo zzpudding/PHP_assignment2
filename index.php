@@ -7,7 +7,7 @@
  */
 session_start();
 //variables
-$wish1 = $wish2 = $wish3 = "";
+$wish1 = $wish2 = $wish3 = $wishTotal = "";
 $name = $zip = $tel = "";
 //font color, will be red when input fails its validation
 $wish1_color = $wish2_color = $wish3_color = "";
@@ -47,18 +47,19 @@ function wishValidation()
     $_SESSION['wish1'] = $_POST['wish1'];
     $_SESSION['wish2'] = $_POST['wish2'];
     $_SESSION['wish3'] = $_POST['wish3'];
+    $wishTotal = trim($_SESSION['wish1'] . $_SESSION['wish2'] . $_SESSION['wish3']);
 
-    if (empty($_SESSION['wish1']) || empty($_SESSION['wish2']) || empty($_SESSION['wish3'])) { //empty wish will fail validation
-        $msg = "Wish cannot be empty";
-    } elseif (preg_match("/.*\d.*/", $_SESSION['wish1'])) {//wish contains digitals will fail validation
+    if (empty($wishTotal)) { //NO wish filled will fail validation
+        $msg = "Please at least have one wish filled";
+    } elseif (preg_match("/.*\d.*/", $_SESSION['wish1'])) {//wish contains digital will fail validation
         global $wish1_color;
         $wish1_color = "style='color:red';";
         $msg = "Wish1 should only contain letters.";
-    } elseif (preg_match("/.*\d.*/", $_SESSION['wish2'])) {//wish contains digitals will fail validation
+    } elseif (preg_match("/.*\d.*/", $_SESSION['wish2'])) {//wish contains digital will fail validation
         global $wish2_color;
         $wish2_color = "style='color:red';";
         $msg = "Wish2 should only contain letters.";
-    } elseif (preg_match("/.*\d.*/", $_SESSION['wish3'])) {//wish contains digitals will fail validation
+    } elseif (preg_match("/.*\d.*/", $_SESSION['wish3'])) {//wish contains digital will fail validation
         global $wish3_color;
         $wish3_color = "style='color:red';";
         $msg = "Wish3 should only contain letters.";
@@ -139,9 +140,24 @@ function infoValidation()
         case 2:
             echo "Wishes overview";
             break;
-    } ?>
+    }
+    ?>
 </h1>
-
+<p style="color:palevioletred">
+    <?php
+    switch ($_SESSION['step']){//give hint for user on function of 'Ok'
+        case 0:
+            echo "";
+            break;
+        case 1:
+            echo "";
+            break;
+        case 2:
+            echo "Hint: click on 'Ok' to have another wishlist :) ";
+            break;
+    }
+    ?>
+</p>
 
 <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
     <table>
@@ -236,7 +252,6 @@ function infoValidation()
                 ?></td>
         </tr>
     </table>
-
     <table>
         <tr>
             <td>
@@ -259,7 +274,6 @@ function infoValidation()
             </td>
         </tr>
     </table>
-
 </form>
 </body>
 </html>
